@@ -38,7 +38,7 @@ class App extends Component {
 
   render() {
     return (
-      <React.Fragment>
+      <div style={{backgroundColor: '#a3b03e' , height: '100vh'}}>
         <Grid container
           direction="row"
           justify="space-evenly"
@@ -75,7 +75,7 @@ class App extends Component {
             <ChatBox chat={this.state.chat}/>
           </Grid>
         </Grid>
-      </React.Fragment>
+      </div>
     );
   }
 }
