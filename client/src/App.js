@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import io from "socket.io-client";
 import 'fontsource-roboto';
 import Header from './components/Header'
-import {  TextField, Button, Grid, Paper } from '@material-ui/core'
+import { TextField, Button, Grid, Paper } from '@material-ui/core'
 import { useStyles } from './AppStyle'
 const socket = io.connect("http://localhost:5000");
 
@@ -55,20 +55,27 @@ class App extends Component {
           </Grid>
           <Grid xs={12} sm={6}>
             <Paper>
-              <Grid container spacing={2}>
-
+              <Grid
+                container
+                spacing={2}
+                direction="column"
+                justify="space-around"
+                alignItems="center">
                 <Grid item xs={12} sm={6}>
                   <TextField id="nickname" label="Tu apodo" variant="outlined" name="nickname" value={this.state.nickname} onChange={e => this.onTextChange(e)} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField id="msg" label="Tu mensaje" variant="outlined" name="msg" value={this.state.msg} onChange={e => this.onTextChange(e)} />
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Button variant="contained" color="primary" onClick={this.onMessageSubmit}>
+                    Enviar
+                  </Button>
+                </Grid>
               </Grid>
 
 
-              <Button variant="contained" color="primary" onClick={this.onMessageSubmit}>
-                Enviar
-        </Button>
+
             </Paper>
           </Grid>
           <Grid xs={12} sm={6}>

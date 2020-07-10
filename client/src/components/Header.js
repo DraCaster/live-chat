@@ -4,6 +4,7 @@ import {Paper, Typography} from '@material-ui/core'
 
 export const useStyles = makeStyles(theme => ({
     paper: {
+      backgroundColor:'#f2cd66',
       padding: theme.spacing(2),
       textAlign: 'center',
       color: theme.palette.text.secondary,
