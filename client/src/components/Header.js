@@ -6,6 +6,7 @@ export const useStyles = makeStyles(theme => ({
     paper: {
       backgroundColor:'#f2cd66',
       padding: theme.spacing(2),
+      marginBottom: theme.spacing(5),
       textAlign: 'center',
       color: theme.palette.text.secondary,
     },

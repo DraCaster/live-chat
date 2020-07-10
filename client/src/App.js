@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
 import 'fontsource-roboto';
+
 import Header from './components/Header'
-import { TextField, Button, Grid, Paper } from '@material-ui/core'
-import { useStyles } from './AppStyle'
+import ChatBox from './components/ChatBox'
+import { TextField, Button, Grid, Paper, Typography } from '@material-ui/core'
+
 const socket = io.connect("http://localhost:5000");
 
 class App extends Component {
-  // Add constructor to initiate
+
   constructor() {
     super();
     this.state = { msg: "", chat: [], nickname: "" };
@@ -20,17 +22,6 @@ class App extends Component {
         chat: [...this.state.chat, { nickname, msg }]
       });
     });
-  }
-
-  renderChat() {
-    const { chat } = this.state;
-    return chat.map(({ nickname, msg }, idx) => (
-      <div key={idx}>
-        <span style={{ color: "green" }}>{nickname}: </span>
-
-        <span>{msg}</span>
-      </div>
-    ));
   }
 
   // Function for getting text input
@@ -46,10 +37,12 @@ class App extends Component {
   };
 
   render() {
-    //const classes = useStyles()
     return (
-      <div style={{ flexGrow: 1 }}>
-        <Grid container spacing={3}>
+      <React.Fragment>
+        <Grid container
+          direction="row"
+          justify="space-evenly"
+          alignItems="center">
           <Grid item xs={12}>
             <Header title="Bienvenidos al chat en vivo de Lushan \(^_^)/" />
           </Grid>
@@ -62,27 +55,27 @@ class App extends Component {
                 justify="space-around"
                 alignItems="center">
                 <Grid item xs={12} sm={6}>
+                  <Typography variant="subtitle1">Comenza a chatear!</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
                   <TextField id="nickname" label="Tu apodo" variant="outlined" name="nickname" value={this.state.nickname} onChange={e => this.onTextChange(e)} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField id="msg" label="Tu mensaje" variant="outlined" name="msg" value={this.state.msg} onChange={e => this.onTextChange(e)} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Button variant="contained" color="primary" onClick={this.onMessageSubmit}>
-                    Enviar
+                  <Button variant="contained" color="secondary" onClick={this.onMessageSubmit}>
+                    Enviar mensaje
                   </Button>
                 </Grid>
               </Grid>
-
-
-
             </Paper>
           </Grid>
           <Grid xs={12} sm={6}>
-            <div>{this.renderChat()}</div>
+            <ChatBox chat={this.state.chat}/>
           </Grid>
         </Grid>
-      </div>
+      </React.Fragment>
     );
   }
 }
