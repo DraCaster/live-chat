@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import 'fontsource-roboto'; 
 
@@ -8,35 +8,46 @@ import { TextField, Button, Grid, Paper, Typography } from '@material-ui/core'
 
 const socket = io.connect("http://localhost:5000");
 
-class App extends Component {
+const App = () => {
 
-  constructor() {
-    super();
-    this.state = { msg: "", chat: [], nickname: "" };
-  }
+  const [chat, setChat] = useState([])
+  const [nickname, setNickname] = useState('')
+  const [msg, setMsg] = useState('')
+  const [getMessages, setGetMessages] = useState(true)
 
-  componentDidMount() {
+  useEffect(() => {
+    if(getMessages){
+      fetchMessages();
+    }
+  },[chat, nickname,msg])
+
+  
+  const fetchMessages = () => {
     socket.on("chat message", ({ nickname, msg }) => {
-      // Add new messages to existing messages in "chat"
-      this.setState({
-        chat: [...this.state.chat, { nickname, msg }]
-      });
-    });
-  }
 
+      // Add new messages to existing messages in "chat"
+      setChat([...chat, {nickname,msg}])
+     
+    });
+    setGetMessages(false)
+  }
+ 
   // Function for getting text input
-  onTextChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+  const onTextChange = e => {
+    if(e.target.name === 'nickname'){
+      setNickname(e.target.value)
+    }else{
+      setMsg(e.target.value)
+    }
   };
 
   // Function for sending message to chat server
-  onMessageSubmit = () => {
-    const { nickname, msg } = this.state;
+  const onMessageSubmit = () => {
     socket.emit("chat message", { nickname, msg });
-    this.setState({ msg: "" });
+    setGetMessages(true)
+    setMsg('');
   };
 
-  render() {
     return (
       <div style={{backgroundColor: '#a3b03e' , height: '100vh'}}>
         <Grid container
@@ -46,7 +57,7 @@ class App extends Component {
           <Grid item xs={12}>
             <Header title="Bienvenidos al chat en vivo de Lushan \(^_^)/" />
           </Grid>
-          <Grid xs={12} sm={6}>
+          <Grid item xs={12} sm={6}>
             <Paper>
               <Grid
                 container
@@ -58,26 +69,26 @@ class App extends Component {
                   <Typography variant="subtitle1">Comenza a chatear!</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField id="nickname" label="Tu apodo" variant="outlined" name="nickname" value={this.state.nickname} onChange={e => this.onTextChange(e)} />
+                  <TextField id="nickname" label="Tu apodo" variant="outlined" name="nickname" value={nickname} onChange={e => onTextChange(e)} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField id="msg" label="Tu mensaje" variant="outlined" name="msg" value={this.state.msg} onChange={e => this.onTextChange(e)} />
+                  <TextField id="msg" label="Tu mensaje" variant="outlined" name="msg" value={msg} onChange={e => onTextChange(e)} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Button variant="contained" color="secondary" onClick={this.onMessageSubmit}>
+                  <Button variant="contained" color="secondary" onClick={onMessageSubmit}>
                     Enviar mensaje
                   </Button>
                 </Grid>
               </Grid>
             </Paper>
           </Grid>
-          <Grid xs={12} sm={6}>
-            <ChatBox chat={this.state.chat}/>
+          <Grid xs={12} sm={6} item>
+            <ChatBox chat={chat}/>
           </Grid>
         </Grid>
       </div>
     );
   }
-}
+
 
 export default App;
